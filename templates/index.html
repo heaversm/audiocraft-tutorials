@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Audio Gen Demo</title>
+  <link rel="icon" href="https://zany.sh/favicon.svg"/>
 </head>
 <body>
 <h1>AudioGen Demo</h1>
 <input type="text" name="description1" id="description1" placeholder="description1"><br/>
-<input type="text" name="description2" id="description2" placeholder="description2">
+<input type="text" name="description2" id="description2" placeholder="description2"><br/>
 <button id="generateAudioButton">Generate Audio</button><br/>
 <div id="results"></div>
 <script>
@@ -28,11 +29,12 @@
       })
       .then(response => response.json())
       .then(data => {
-          const resultsDiv = document.getElementById("results");
-          resultsDiv.innerHTML = "<h2>Results:</h2>";
-          data.results.forEach(result => {
-              resultsDiv.innerHTML += `<p>${result}</p>`;
-          });
+        console.log("audio samples generated", data);
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "<h2>Results:</h2>";
+        data.results.forEach((result, index) => {
+            resultsDiv.innerHTML += `<p><a href="/download_audio/${index}" download>Download ${result}</a></p>`;
+        });
       })
       .catch(error => {
           console.error("Error:", error);
