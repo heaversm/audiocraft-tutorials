@@ -1,10 +1,8 @@
-from flask import Flask, render_template, jsonify, request, send_from_directory
 import torchaudio
 from audiocraft.models import AudioGen
 from audiocraft.data.audio import audio_write
-import argparse
 import os
-
+import gradio as gr
 
 def generate_audio(descriptions):
   if not os.path.exists('audio_files'):
@@ -24,24 +22,15 @@ def generate_audio(descriptions):
   
   return results
 
-app = Flask(__name__)
-
-@app.route("/download_audio/<int:file_id>")
-def download_audio(file_id):
-    directory = 'audio_files'
-    filename = f'{file_id}.wav'
-    return send_from_directory(directory, filename, as_attachment=True)
-
-@app.route("/generate_audio", methods=['POST'])
-def generate_audio_route():
-    data = request.get_json()
-    descriptions = data.get("descriptions")
-    if descriptions:
-        results = generate_audio(descriptions)
-        return jsonify({"results": results})
-    else:
-        return jsonify({"error": "No descriptions provided"})
-
-@app.route("/")
-def generate_home_route():
-    return render_template('index.html')
+def ui_full():
+   with gr.Blocks() as interface:
+      gr.Markdown(
+            """
+            # Audiogen
+            
+            presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
+            """
+        )
+      interface.queue().launch()
+      
+ui_full()
